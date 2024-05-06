@@ -1,7 +1,7 @@
 # Currency converter API mini-app 
 
-* Stack: js, html, css, svelte, vite, node js
-  
+* Stack: typescript, html, css, svelte, vite, node js
+![Alt text](relative%20path/to/app.png?raw=true "Title")
     
 
 
