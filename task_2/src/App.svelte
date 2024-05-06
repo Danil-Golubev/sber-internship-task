@@ -1,43 +1,93 @@
 
 <script lang="ts">
-
   import Counter from './lib/Counter.svelte'
+  let res:any;
+  let resJSON:any;
+  let inputValue1= 1.00;
+  let inputCur1="AED";
+  let inputValue2 =1.00
+  let inputCur2="AED";
+
+  let state = {
+    flag: false}
+    const getCurrensyRate = async (currensy: String)=>{
+       res = await fetch(`https://open.er-api.com/v6/latest/${currensy}`)
+       resJSON = await res.json()
+      state.flag = true;
+      console.log(resJSON.rates);
+    }
+
+    
+
+    const countValueFirst = async (event:Event)=>{
+      const target = event.target as HTMLInputElement;
+      inputValue1 = Number(target.value)
+      const res1 = await fetch(`https://open.er-api.com/v6/latest/${inputCur1}`)
+      const resJSON1 = await res1.json()
+      inputValue2 = Number(resJSON1.rates[inputCur2]) * Number(inputValue1)
+    }
+
+    const countValueSecond = async (event:Event)=>{
+      const target = event.target as HTMLInputElement;
+      inputValue2 = Number(target.value)
+      const res2 = await fetch(`https://open.er-api.com/v6/latest/${inputCur2}`)
+      const resJSON2 = await res2.json()
+      inputValue1 = Number(resJSON2.rates[inputCur1]) * Number(inputValue2)
+    }
+
+
+    getCurrensyRate("AED");
+    const handleInputCur1 = async (event:Event)=>{
+      const target = event.target as HTMLInputElement;
+      inputCur1 = target.value
+      const res1 = await fetch(`https://open.er-api.com/v6/latest/${inputCur1}`)
+      const resJSON1 = await res1.json()
+      inputValue2 = Number(resJSON1.rates[inputCur2]) * Number(inputValue1)
+    }
+    const handleInputCur2 = async (event:Event)=>{
+      const target = event.target as HTMLInputElement;
+      inputCur2 = target.value
+      const res2 = await fetch(`https://open.er-api.com/v6/latest/${inputCur1}`)
+      const resJSON2 = await res2.json()
+      inputValue2 = Number(resJSON2.rates[inputCur2]) * Number(inputValue1)
+    }
+
+
+
 </script>
 
 <main>
-  <div>
-    <a href="https://vitejs.dev" target="_blank" rel="noreferrer">
-    </a>
-    <a href="https://svelte.dev" target="_blank" rel="noreferrer">
+{#if state.flag == true}
+<ul class="myul">
+<li class="myli"><input type="text" on:input={countValueFirst} value={inputValue1}></li>
+<li class="myli">
+  <select class ="currencyList" on:input={handleInputCur1}>
+  {#each Object.entries(resJSON.rates) as [key]}
+    <option on:click={handleInputCur1}>{key}</option>)){/each}
+  </select>
+</li>
+</ul>
+  <p>is</p>
+  <ul class="myul">
+    <li class="myli"><input type="text" on:input={countValueSecond} value={inputValue2}></li>
+    <li class="myli">
+      <select class ="currencyList" on:input={handleInputCur2}>
+      {#each Object.entries(resJSON.rates) as [key]}
+        <option on:click={handleInputCur2}>{key}</option>)){/each}
+      </select>
+    </li>
+    </ul>
+ 
+{/if}
 
-    </a>
-  </div>
-  <h1>Vite + Svelte</h1>
-
-
-  <p>
-    Check out <a href="https://github.com/sveltejs/kit#readme" target="_blank" rel="noreferrer">SvelteKit</a>, the official Svelte app framework powered by Vite!
-  </p>
-
-  <p class="read-the-docs">
-    Click on the Vite and Svelte logos to learn more
-  </p>
 </main>
 
 <style>
-  .logo {
-    height: 6em;
-    padding: 1.5em;
-    will-change: filter;
-    transition: filter 300ms;
+  .currencyList{
+    width: 50px;
   }
-  .logo:hover {
-    filter: drop-shadow(0 0 2em #646cffaa);
-  }
-  .logo.svelte:hover {
-    filter: drop-shadow(0 0 2em #ff3e00aa);
-  }
-  .read-the-docs {
-    color: #888;
+  .myli{
+    display: inline;
+    list-style-type: none;
   }
 </style>
