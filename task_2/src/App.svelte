@@ -17,6 +17,8 @@
       console.log(resJSON.rates);
     }
 
+    
+
     const countValueFirst = async (event:Event)=>{
       const target = event.target as HTMLInputElement;
       inputValue1 = Number(target.value)
@@ -34,6 +36,7 @@
     }
 
 
+    getCurrensyRate("AED");
     const handleInputCur1 = async (event:Event)=>{
       const target = event.target as HTMLInputElement;
       inputCur1 = target.value
@@ -44,12 +47,12 @@
     const handleInputCur2 = async (event:Event)=>{
       const target = event.target as HTMLInputElement;
       inputCur2 = target.value
-      const res2 = await fetch(`https://open.er-api.com/v6/latest/${inputCur2}`)
+      const res2 = await fetch(`https://open.er-api.com/v6/latest/${inputCur1}`)
       const resJSON2 = await res2.json()
-      inputValue2 = Number(resJSON2.rates[inputCur1]) * Number(inputValue2)
+      inputValue2 = Number(resJSON2.rates[inputCur2]) * Number(inputValue1)
     }
 
-    getCurrensyRate("AED");
+
 
 </script>
 
